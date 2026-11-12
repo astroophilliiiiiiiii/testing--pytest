@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-from _pytest.scope import Scope
+from _pytest.scope import Scope, is_valid_scope
 import pytest
 
 
@@ -39,3 +39,14 @@ def test_from_user() -> None:
     expected_msg = "for parametrize from some::id got an unexpected scope value 'foo'"
     with pytest.raises(pytest.fail.Exception, match=re.escape(expected_msg)):
         Scope.from_user("foo", "for parametrize", "some::id")  # type:ignore[arg-type]
+
+
+def test_is_valid_scope() -> None:
+    # Valid scope names should return True.
+    for name in ("function", "class", "module", "package", "session"):
+        assert is_valid_scope(name)
+
+    # Invalid values should return False.
+    invalids = ["foo", "", None, 123, [], {}]
+    for bad in invalids:
+        assert not is_valid_scope(bad)
