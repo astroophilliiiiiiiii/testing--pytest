@@ -67,3 +67,22 @@ def test_stash() -> None:
     assert stash2[key2] + stash2[key3] == 300
     assert stash[key2] == 1
     assert key3 not in stash
+
+
+def test_pop_existing() -> None:
+    stash = Stash()
+    key = StashKey[int]()
+    stash[key] = 42
+    value = stash.pop(key)
+    assert value == 42
+    assert key not in stash
+    assert len(stash) == 0
+
+
+def test_pop_missing() -> None:
+    stash = Stash()
+    missing_key = StashKey[str]()
+    # Without default, should return None
+    assert stash.pop(missing_key) is None
+    # With custom default
+    assert stash.pop(missing_key, "default") == "default"

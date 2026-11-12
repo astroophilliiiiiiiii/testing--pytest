@@ -100,6 +100,21 @@ class Stash:
             self[key] = default
             return default
 
+    def pop(self, key: StashKey[T], default: D | None = None) -> T | D | None:
+        """Remove *key* from the stash and return its value.
+
+        If *key* is present, the associated value is removed from the internal
+        storage and returned.  If the key is absent, *default* is returned
+        (which defaults to ``None``).
+
+        This mirrors the behaviour of ``dict.pop`` but is type‑safe thanks to
+        ``StashKey``.
+        """
+        try:
+            return cast(T, self._storage.pop(key))
+        except KeyError:
+            return default
+
     def __delitem__(self, key: StashKey[T]) -> None:
         """Delete the value for key.
 
