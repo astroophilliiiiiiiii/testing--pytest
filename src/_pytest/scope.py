@@ -89,3 +89,18 @@ _SCOPE_INDICES = {scope: index for index, scope in enumerate(_ALL_SCOPES)}
 
 # Ordered list of scopes which can contain many tests (in practice all except Function).
 HIGH_SCOPES = [x for x in Scope if x is not Scope.Function]
+
+
+def is_valid_scope(scope_name: str) -> bool:
+    '''Return True if *scope_name* is one of the valid pytest scope strings.
+
+    Valid values are "function", "class", "module", "package", and "session".
+    Any other value – including non‑string inputs – results in False.
+    '''
+    if not isinstance(scope_name, str):
+        return False
+    try:
+        Scope(scope_name)
+        return True
+    except ValueError:
+        return False
